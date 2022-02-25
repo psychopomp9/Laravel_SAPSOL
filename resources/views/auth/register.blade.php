@@ -45,24 +45,43 @@
                             <label for="address" class="col-md-4 col-form-label text-md-end">{{ __('Address') }}</label>
 
                             <div class="col-md-6">
-                                <input id="address" type="text" class="form-control @error('address') is-invalid @enderror" name="address" required autocomplete="address">
-                                {{-- <div id="address"></div> --}}
-                                {{-- <pre id="result"></pre>
+                                <style>
+                                    /* #address {
+                                    z-index: 1;
+                                    margin: 20px;
+                                    } */
+                                    .mapboxgl-ctrl-geocoder {
+                                    min-width: 100%;
+                                    }
+                                </style>
+
+                                
+                                <div id="geocoder" class="form-control @error('address') is-invalid @enderror"></div>
+                                <input type="hidden" id="address" name="address" value="">
+                                
                                 <script>
                                     mapboxgl.accessToken = 'pk.eyJ1IjoidGh1bmRlcmJpcmQ5IiwiYSI6ImNsMDFzNTdzczB1NG0zcXBtYXV6dDZ3am0ifQ.t20lkMGNK42DTdtI0ZgssA';
                                     const geocoder = new MapboxGeocoder({
-                                        accessToken: mapboxgl.accessToken,
-                                        types: 'country, region,place,postcode,locality,neighbourhood'
+                                        accessToken: mapboxgl.accessToken
                                     });
 
-                                    geocoder.addTo('#address');
-                                    
-                                    const results = document.getElementById('result');
+                                    geocoder.addTo('#geocoder');
 
+                                    const results = document.getElementById('address');
+ 
                                     geocoder.on('result', (e) => {
-                                        results.innerText = JSON.stringify(e.result, null, 2);
+                                    
+                                        var val = JSON.stringify(e.result.place_name, null, 2);
+
+                                        val = val.replace(/\"/g, ""); //to replace "" from result string
+                                        // console.log(val);
+                                        results.value = val;
                                     });
-                                </script> --}}
+                                    
+                                    geocoder.on('clear', () => {
+                                    results.value = '';
+                                });
+                                </script>
                                 
                                 @error('address')
                                     <span class="invalid-feedback" role="alert">
